@@ -1,0 +1,25 @@
+create table terms
+(
+    id          serial
+        primary key,
+    version     varchar(10) not null,
+    title       varchar(50) not null,
+    content     text,
+    apply_date  date        not null,
+    regist_time timestamp default CURRENT_TIMESTAMP,
+    update_time timestamp default CURRENT_TIMESTAMP,
+    delete_flg  boolean   default false,
+    delete_time timestamp
+);
+
+comment on column terms.version is 'バージョン';
+
+comment on column terms.title is '更新内容';
+
+comment on column terms.content is '規約内容(規約の全文)';
+
+comment on column terms.apply_date is '更新日';
+
+comment on column terms.delete_flg is '削除フラグ';
+
+comment on column terms.delete_time is '削除日時';
