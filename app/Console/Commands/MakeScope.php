@@ -7,6 +7,7 @@ use Illuminate\Console\Command;
 class MakeScope extends Command
 {
     protected $signature = 'make:scope {model} {name}';
+
     protected $description = 'Add a new local scope to a model';
 
     public function handle()
@@ -16,8 +17,9 @@ class MakeScope extends Command
 
         $modelPath = app_path("Models/{$model}.php");
 
-        if (!file_exists($modelPath)) {
+        if (! file_exists($modelPath)) {
             $this->error("Model {$model} not found!");
+
             return;
         }
 

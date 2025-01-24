@@ -24,4 +24,3 @@ Route::post('terms', [App\Http\Controllers\api\TermController::class, 'store']);
 Route::get('terms/{id}', [App\Http\Controllers\api\TermController::class, 'show']);
 Route::put('terms/{id}', [App\Http\Controllers\api\TermController::class, 'update']);
 Route::delete('terms/{id}', [App\Http\Controllers\api\TermController::class, 'destroy']);
-

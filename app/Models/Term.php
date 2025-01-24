@@ -13,6 +13,7 @@ class Term extends Model
     protected $table = 'terms';
 
     const CREATED_AT = 'regist_time';
+
     const UPDATED_AT = 'update_time';
 
     /**
@@ -59,6 +60,6 @@ class Term extends Model
      */
     protected static function booted()
     {
-        static::addGlobalScope(new WithoutDeleteScope());
+        static::addGlobalScope(new WithoutDeleteScope);
     }
 }
