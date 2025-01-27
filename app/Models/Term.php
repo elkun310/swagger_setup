@@ -2,64 +2,34 @@
 
 namespace App\Models;
 
-use App\Scopes\WithoutDeleteScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Term extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'terms';
-
-    const CREATED_AT = 'regist_time';
-
-    const UPDATED_AT = 'update_time';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    //  更新可能カラムのホワイトリスト
     protected $fillable = [
         'version',
         'title',
         'content',
         'apply_date',
-        'delete_flg',
-        'delete_time',
     ];
 
     /**
-     * The attributes that should be visible in arrays.
+     * The attributes that should be hidden for arrays.
      *
      * @var array
      */
-    protected $visible = [
-        'id',
-        'version',
-        'title',
-        'content',
-        'apply_date',
+    protected $hidden = [
+        'deleted_at', // Ẩn cột deleted_at khỏi kết quả JSON nếu không cần thiết
     ];
-
-    /**
-     * Scope a query to filter by WithoutDeleted.
-     */
-    public function scopeWithoutDeleted($query, $value)
-    {
-        // Add your query logic here
-        return $query;
-    }
-
-    /**
-     * The "booted" method of the model.
-     *
-     * @return void
-     */
-    protected static function booted()
-    {
-        static::addGlobalScope(new WithoutDeleteScope);
-    }
 }

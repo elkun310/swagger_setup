@@ -15,13 +15,12 @@ use OpenApi\Annotations as OA;
  * ),
  *
  * @OA\SecurityScheme(
- * securityScheme="bearerAuth",
- * in="header",
- * name="bearerAuth",
- * type="http",
- * scheme="bearer",
- * bearerFormat="JWT",
- * ),
+ *     securityScheme="sanctum",
+ *      type="apiKey",
+ *      in="header",
+ *      name="Authorization",
+ *      description="Enter your Bearer token in this format: `Bearer {token}`"
+ * )
  */
 class Controller extends BaseController
 {

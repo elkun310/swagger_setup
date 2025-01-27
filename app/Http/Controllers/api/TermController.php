@@ -12,8 +12,33 @@ class TermController extends Controller
     /**
      * @OA\Get(
      *     path="/api/terms",
-     *     summary="Get list of terms",
+     *     summary="Get list of terms with pagination",
      *     tags={"Terms"},
+     *     security={{"sanctum": {}}},
+     *
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         description="The page number",
+     *         required=false,
+     *
+     *         @OA\Schema(
+     *             type="integer",
+     *             default=1
+     *         )
+     *     ),
+     *
+     *     @OA\Parameter(
+     *         name="limit",
+     *         in="query",
+     *         description="Number of items per page",
+     *         required=false,
+     *
+     *         @OA\Schema(
+     *             type="integer",
+     *             default=20
+     *         )
+     *     ),
      *
      *     @OA\Response(
      *         response=200,
@@ -37,20 +62,30 @@ class TermController extends Controller
      *                     @OA\Property(property="content", type="string", description="Content of the term"),
      *                     @OA\Property(property="apply_date", type="string", format="date", description="Apply date of the term"),
      *                 )
-     *             )
+     *             ),
+     *             @OA\Property(property="current_page", type="integer", description="Current page"),
+     *             @OA\Property(property="last_page", type="integer", description="Last page"),
+     *             @OA\Property(property="per_page", type="integer", description="Number of items per page")
      *         )
      *     )
      * )
      */
-    public function index()
+    public function index(Request $request)
     {
-        $terms = Term::query()
-            ->orderBy('regist_time')->get();
+        // Lấy tham số 'page' và 'limit' từ request (mặc định 'page' = 1 và 'limit' = 20 nếu không có giá trị)
+        $page = $request->get('page', 1); // Trang mặc định là 1
+        $limit = $request->get('limit', 20); // Giới hạn mặc định là 20 bản ghi mỗi trang
+
+        // Phân trang theo tham số 'limit', sử dụng 'page' và 'limit' từ request
+        $terms = Term::query()->paginate($limit, ['*'], 'page', $page);
 
         return response()->json([
             'message' => 'OK',
-            'total' => $terms->count(),
-            'terms' => $terms,
+            'terms' => $terms->items(), // Danh sách bản ghi của trang hiện tại
+            'total' => $terms->total(), // Tổng số bản ghi
+            'current_page' => $terms->currentPage(), // Trang hiện tại
+            'last_page' => $terms->lastPage(), // Trang cuối cùng
+            'per_page' => $terms->perPage(), // Số lượng bản ghi mỗi trang
         ]);
     }
 
@@ -59,6 +94,7 @@ class TermController extends Controller
      *     path="/api/terms/{id}",
      *     summary="Get a single term by ID",
      *     tags={"Terms"},
+     *     security={{"sanctum": {}}},
      *
      *     @OA\Parameter(
      *         name="id",
@@ -102,8 +138,7 @@ class TermController extends Controller
      */
     public function show($id)
     {
-        $term = Term::where('id', $id)
-            ->orderBy('regist_time')->first();
+        $term = Term::where('id', $id)->first();
 
         if (! $term) {
             return response()->json(['message' => 'Term not found'], 404);
@@ -119,6 +154,7 @@ class TermController extends Controller
      *     description="Creates a new term with the provided details.",
      *     operationId="storeTerm",
      *     tags={"Terms"},
+     *     security={{"sanctum": {}}},
      *
      *     @OA\RequestBody(
      *         required=true,
@@ -186,6 +222,7 @@ class TermController extends Controller
      *     description="Updates the details of an existing term by its ID.",
      *     operationId="updateTerm",
      *     tags={"Terms"},
+     *     security={{"sanctum": {}}},
      *
      *     @OA\Parameter(
      *         name="id",
@@ -278,6 +315,7 @@ class TermController extends Controller
      *     description="Deletes a term by its ID.",
      *     operationId="deleteTerm",
      *     tags={"Terms"},
+     *     security={{"sanctum": {}}},
      *
      *     @OA\Parameter(
      *         name="id",
@@ -309,10 +347,7 @@ class TermController extends Controller
         if (! $term) {
             return response()->json(['message' => 'Term not found'], 404);
         }
-        $term->update([
-            'delete_flg' => true,
-            'delete_time' => now(),
-        ]);
+        $term->delete();
 
         return response()->json(null, 204);
     }
