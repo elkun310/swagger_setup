@@ -194,18 +194,18 @@
 
             function uploadFile(file, index) {
                 const formData = new FormData();
-                formData.append('file', file);
+            formData.append('file', file);
                 formData.append('_token', '{{ csrf_token() }}');
 
                 const previewItem = $(`.file-preview-item[data-index="${index}"]`);
                 const fileProgressBar = previewItem.find('.progress-bar');
 
-                $.ajax({
+            $.ajax({
                     url: form.attr('action'),
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
                     xhr: function() {
                         const xhr = new window.XMLHttpRequest();
                         xhr.upload.addEventListener('progress', function(e) {
@@ -302,8 +302,8 @@
                 }
                 
                 updateOverallProgress();
-            });
         });
-    </script>
+    });
+</script>
 </body>
 </html>

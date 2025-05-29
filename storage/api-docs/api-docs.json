@@ -1,10 +1,245 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "APIs For Test Swagger",
+        "title": "File Upload API",
+        "description": "API for managing file uploads",
+        "contact": {
+            "email": "admin@example.com"
+        },
         "version": "1.0.0"
     },
     "paths": {
+        "/api/upload": {
+            "post": {
+                "tags": [
+                    "Files"
+                ],
+                "summary": "Upload a file",
+                "operationId": "fc84980f5749cfa362b4504f39391247",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "file": {
+                                        "description": "File to upload (max 10MB)",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "File uploaded successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "File uploaded successfully"
+                                        },
+                                        "file": {
+                                            "properties": {
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "abc123.pdf"
+                                                },
+                                                "size": {
+                                                    "type": "integer",
+                                                    "example": 1024
+                                                },
+                                                "type": {
+                                                    "type": "string",
+                                                    "example": "application/pdf"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The file field is required."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/files": {
+            "get": {
+                "tags": [
+                    "Files"
+                ],
+                "summary": "List all uploaded files",
+                "operationId": "247ea07fb713482ffea6fca2e7bdfc14",
+                "responses": {
+                    "200": {
+                        "description": "List of files",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "name": {
+                                                "type": "string",
+                                                "example": "document.pdf"
+                                            },
+                                            "size": {
+                                                "type": "integer",
+                                                "example": 1024
+                                            },
+                                            "size_text": {
+                                                "type": "string",
+                                                "example": "1.00 KB"
+                                            },
+                                            "url": {
+                                                "type": "string",
+                                                "example": "http://example.com/storage/files/document.pdf"
+                                            },
+                                            "created_at": {
+                                                "type": "integer",
+                                                "example": 1623456789
+                                            },
+                                            "extension": {
+                                                "type": "string",
+                                                "example": "pdf"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/files/{filename}": {
+            "get": {
+                "tags": [
+                    "Files"
+                ],
+                "summary": "View/download a file",
+                "operationId": "f32ed2d2c0d7bf3e8d40416220017ccb",
+                "parameters": [
+                    {
+                        "name": "filename",
+                        "in": "path",
+                        "description": "Name of the file to view/download",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "File content",
+                        "content": {
+                            "application/octet-stream": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "binary"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "File not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Files"
+                ],
+                "summary": "Delete a file",
+                "operationId": "169799a2d21e60aa2a43281be22a2798",
+                "parameters": [
+                    {
+                        "name": "filename",
+                        "in": "path",
+                        "description": "Name of the file to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "File deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "File deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "File not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "File not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/login": {
             "post": {
                 "tags": [
@@ -632,6 +867,10 @@
         }
     },
     "tags": [
+        {
+            "name": "Files",
+            "description": "Files"
+        },
         {
             "name": "Auth",
             "description": "Auth"

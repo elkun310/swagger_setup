@@ -8,6 +8,50 @@ use Illuminate\Support\Facades\URL;
 
 class UploadController extends Controller
 {
+    /**
+     * @OA\Post(
+     *     path="/api/upload",
+     *     summary="Upload a file",
+     *     tags={"Files"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     property="file",
+     *                     type="string",
+     *                     format="binary",
+     *                     description="File to upload (max 10MB)"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="File uploaded successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="File uploaded successfully"),
+     *             @OA\Property(
+     *                 property="file",
+     *                 type="object",
+     *                 @OA\Property(property="name", type="string", example="abc123.pdf"),
+     *                 @OA\Property(property="size", type="integer", example=1024),
+     *                 @OA\Property(property="type", type="string", example="application/pdf")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="The file field is required.")
+     *         )
+     *     )
+     * )
+     */
     public function upload(Request $request)
     {
         try {
@@ -53,6 +97,28 @@ class UploadController extends Controller
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/files",
+     *     summary="List all uploaded files",
+     *     tags={"Files"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of files",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 @OA\Property(property="name", type="string", example="document.pdf"),
+     *                 @OA\Property(property="size", type="integer", example=1024),
+     *                 @OA\Property(property="size_text", type="string", example="1.00 KB"),
+     *                 @OA\Property(property="url", type="string", example="http://example.com/storage/files/document.pdf"),
+     *                 @OA\Property(property="created_at", type="integer", example=1623456789),
+     *                 @OA\Property(property="extension", type="string", example="pdf")
+     *             )
+     *         )
+     *     )
+     * )
+     */
     public function listFiles()
     {
         $files = Storage::disk('local')->files('uploads');
@@ -79,6 +145,32 @@ class UploadController extends Controller
         return view('files.list', compact('filesData'));
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/files/{filename}",
+     *     summary="View/download a file",
+     *     tags={"Files"},
+     *     @OA\Parameter(
+     *         name="filename",
+     *         in="path",
+     *         required=true,
+     *         description="Name of the file to view/download",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="File content",
+     *         @OA\MediaType(
+     *             mediaType="application/octet-stream",
+     *             @OA\Schema(type="string", format="binary")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="File not found"
+     *     )
+     * )
+     */
     public function viewFile($filename)
     {
         $path = 'uploads/' . $filename;
@@ -89,6 +181,36 @@ class UploadController extends Controller
         abort(404);
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/api/files/{filename}",
+     *     summary="Delete a file",
+     *     tags={"Files"},
+     *     @OA\Parameter(
+     *         name="filename",
+     *         in="path",
+     *         required=true,
+     *         description="Name of the file to delete",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="File deleted successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="File deleted successfully")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="File not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="File not found")
+     *         )
+     *     )
+     * )
+     */
     public function deleteFile($filename)
     {
         try {
