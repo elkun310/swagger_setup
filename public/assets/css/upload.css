@@ -1,0 +1,277 @@
+.upload-area {
+    border: 2px dashed #dee2e6;
+    border-radius: 0.5rem;
+    padding: 2rem;
+    text-align: center;
+    background: #f8f9fa;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.upload-area:hover, 
+.upload-area.dragover {
+    border-color: #0d6efd;
+    background: #e7f0ff;
+}
+
+.upload-icon {
+    font-size: 3rem;
+    color: #6c757d;
+    margin-bottom: 1rem;
+}
+
+.upload-text {
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+
+.upload-hint {
+    color: #adb5bd;
+    font-size: 0.875rem;
+}
+
+#file {
+    display: none;
+}
+
+.progress {
+    display: none;
+    margin-top: 1rem;
+}
+
+.progress-bar {
+    transition: width 0.3s ease;
+}
+
+/* Preview Modal Styles */
+.preview-modal .modal-dialog {
+    max-width: 80%;
+    margin: 1.75rem auto;
+}
+
+@media (min-width: 768px) {
+    .preview-modal .modal-dialog {
+        max-width: 500px;
+    }
+}
+
+.preview-modal .modal-body {
+    padding: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+    min-height: 150px;
+    max-height: 60vh;
+    overflow: auto;
+}
+
+#previewImage {
+    max-width: 100%;
+    max-height: 50vh;
+    object-fit: contain;
+    margin: auto;
+    display: block;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.preview-modal .modal-header,
+.preview-modal .modal-footer {
+    padding: 0.75rem;
+}
+
+/* Mass Delete Styles */
+.mass-delete-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    background: #f8f9fa;
+    border-radius: 0.25rem;
+}
+
+.mass-delete-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.file-checkbox {
+    width: 1.2rem;
+    height: 1.2rem;
+    cursor: pointer;
+}
+
+#selectAll {
+    margin-right: 0.5rem;
+}
+
+.delete-selected-btn {
+    display: none;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.delete-selected-btn:hover {
+    background-color: #bb2d3b;
+}
+
+.delete-selected-btn.visible {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.selected-count {
+    background: #6c757d;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    margin-left: 0.5rem;
+    display: none;
+}
+
+.selected-count.visible {
+    display: inline-block;
+}
+
+/* File Preview List */
+.file-preview-list {
+    margin-top: 1.5rem;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.file-preview-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    margin-bottom: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.file-preview-item:last-child {
+    margin-bottom: 0;
+}
+
+.file-preview-item .file-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+}
+
+.file-preview-item .file-info i {
+    font-size: 1.5rem;
+    color: #6c757d;
+    width: 24px;
+    text-align: center;
+}
+
+.file-preview-item .file-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.file-preview-item .file-name {
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file-preview-item .file-size {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.file-preview-item .file-progress {
+    width: 200px;
+}
+
+.file-preview-item .progress {
+    margin: 0;
+    height: 0.5rem;
+}
+
+.file-preview-item .remove-file {
+    background: none;
+    border: none;
+    color: #dc3545;
+    padding: 0.25rem;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.file-preview-item .remove-file:hover {
+    opacity: 1;
+}
+
+.file-preview-item.upload-success {
+    border-color: #198754;
+    background-color: #f8fff9;
+}
+
+.file-preview-item.upload-error {
+    border-color: #dc3545;
+    background-color: #fff5f5;
+}
+
+/* Upload Progress Container */
+.upload-progress-container {
+    display: none;
+    margin-top: 1.5rem;
+}
+
+.overall-progress {
+    background: #fff;
+    padding: 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+}
+
+.progress-label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: #6c757d;
+}
+
+/* File Type Icons Colors */
+.fa-file-pdf { color: #dc3545; }
+.fa-file-word { color: #0d6efd; }
+.fa-file-excel { color: #198754; }
+.fa-file-image { color: #6f42c1; }
+.fa-file-audio { color: #fd7e14; }
+.fa-file-video { color: #0dcaf0; }
+.fa-file-archive { color: #6c757d; }
+.fa-file-alt { color: #6c757d; }
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .file-preview-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+
+    .file-preview-item .file-progress {
+        width: 100%;
+    }
+
+    .file-preview-item .remove-file {
+        align-self: flex-end;
+    }
+} 

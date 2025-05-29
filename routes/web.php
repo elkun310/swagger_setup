@@ -19,11 +19,29 @@ Route::get('/', function () {
 });
 
 Route::get('/terms', function () {
-    dd('terms');
-})->middleware('auth');
+//    $arr = [1, 2, 3, 4];
+//    foreach ($arr as &$value) {
+//        $value *= 2;
+//    }
+//    dd($arr);
+
+    function &getReference(&$var) {
+        return $var;
+    }
+
+    $a = 5;
+    $b = &getReference($a);
+    $b = 10;
+
+    echo $a;
+});
 
 Route::get('/upload', function () {
     return view('upload');
-});
+})->name('upload.form');
 
 Route::post('/upload', [UploadController::class, 'upload'])->name('upload');
+
+Route::get('/files', [UploadController::class, 'listFiles'])->name('files.list');
+Route::get('/files/view/{filename}', [UploadController::class, 'viewFile'])->name('files.view');
+Route::delete('/files/{filename}', [UploadController::class, 'deleteFile'])->name('files.delete');
