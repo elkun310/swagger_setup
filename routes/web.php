@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\UploadController;
+use App\Http\Controllers\SmsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,3 +28,10 @@ Route::get('/upload', function () {
 });
 
 Route::post('/upload', [UploadController::class, 'upload'])->name('upload');
+
+Route::get('/send-sms', function(){
+    return 
+    '<a href="/submit-sms"><button>Send message</button></a>
+    ';
+});
+Route::get('submit-sms', [SmsController::class, 'sendMessage']);
