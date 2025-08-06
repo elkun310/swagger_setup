@@ -57,7 +57,6 @@ class UploadController extends Controller
     public function upload(Request $request)
     {
         try {
-            dd(2);
             $validator = \Validator::make($request->all(), [
                 'file' => 'required|file|max:10240', // Max 10MB, accept any file type
             ]);
@@ -82,7 +81,8 @@ class UploadController extends Controller
                     'file' => [
                         'name' => $fileName,
                         'size' => $file->getSize(),
-                        'type' => $file->getClientMimeType()
+                        'type' => $file->getClientMimeType(),
+                        'path' => $path
                     ]
                 ]);
             }
@@ -246,7 +246,6 @@ class UploadController extends Controller
         $type = strtolower($matches[1]);
 
         $imageData = base64_decode(substr($base64Image, strpos($base64Image, ',') + 1));
-        dd($imageData);
         if ($imageData === false) {
             return response()->json(['error' => 'Không thể decode ảnh'], 400);
         }

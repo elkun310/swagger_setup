@@ -23,7 +23,6 @@
         const reader = new FileReader();
 
         reader.onload = function (e) {
-            console.log(99999);
             const base64Image = e.target.result;
 
             // Hiển thị trước
@@ -42,7 +41,6 @@
             })
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data.path, 8);
                     if (data.path) {
                         document.getElementById('preview').src = '/' + data.path;
                     } else {

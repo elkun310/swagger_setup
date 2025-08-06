@@ -193,11 +193,9 @@
             }
 
             function uploadFile(file, index) {
-                console.log(file, index, 9)
                 const formData = new FormData();
                 formData.append('file', file);
                 formData.append('_token', '{{ csrf_token() }}');
-                console.log(formData, 888);
 
                 const previewItem = $(`.file-preview-item[data-index="${index}"]`);
                 const fileProgressBar = previewItem.find('.progress-bar');
@@ -229,7 +227,7 @@
                                     toastr.success('All files uploaded successfully!', 'Success');
                                     setTimeout(function() {
                                         window.location.href = "{{ route('files.list') }}";
-                                    }, 1500);
+                                    }, 3500);
                                 }
                             } else {
                                 previewItem.addClass('upload-error');
