@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>File Manager</title>
-    
+
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets/favicon/favicon-32x32.png') }}">
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/favicon/apple-touch-icon.png') }}">
     <link rel="manifest" href="{{ asset('assets/favicon/site.webmanifest') }}">
     <meta name="theme-color" content="#0D6EFD">
-    
+
     <!-- Bootstrap CSS -->
     <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet">
     <!-- Font Awesome CSS -->
@@ -126,11 +126,11 @@
                                                             $isAudio = in_array(strtolower($file['extension']), ['mp3', 'wav', 'ogg', 'm4a', 'aac']);
                                                             $isVideo = in_array(strtolower($file['extension']), ['mp4', 'webm', 'ogg', 'mov']);
                                                         @endphp
-                                                        
+
                                                         @if($isImage || $isPdf || $isAudio || $isVideo)
-                                                            <button type="button" 
-                                                                class="btn btn-view view-file" 
-                                                                data-bs-toggle="modal" 
+                                                            <button type="button"
+                                                                class="btn btn-view view-file"
+                                                                data-bs-toggle="modal"
                                                                 data-bs-target="#previewModal"
                                                                 data-file-url="{{ route('files.view', ['filename' => $file['name']]) }}"
                                                                 data-file-name="{{ $file['name'] }}"
@@ -139,15 +139,15 @@
                                                                 <span>View</span>
                                                             </button>
                                                         @endif
-                                                        <a href="{{ route('files.view', ['filename' => $file['name']]) }}" 
-                                                           class="btn btn-download" 
+                                                        <a href="{{ route('files.view', ['filename' => $file['name']]) }}"
+                                                           class="btn btn-download"
                                                            download>
                                                             <i class="fas fa-download"></i>
                                                             <span>Download</span>
                                                         </a>
-                                                        <button type="button" 
-                                                                class="btn btn-delete delete-file" 
-                                                                data-bs-toggle="modal" 
+                                                        <button type="button"
+                                                                class="btn btn-delete delete-file"
+                                                                data-bs-toggle="modal"
                                                                 data-bs-target="#deleteModal"
                                                                 data-file-name="{{ $file['name'] }}">
                                                             <i class="fas fa-trash-alt"></i>
@@ -324,6 +324,7 @@
 
             $('.view-file').on('click', function() {
                 const fileUrl = $(this).data('file-url');
+                console.log(fileUrl, 9);
                 const fileName = $(this).data('file-name');
                 const fileType = $(this).data('file-type');
 
@@ -478,4 +479,4 @@
         });
     </script>
 </body>
-</html> 
+</html>

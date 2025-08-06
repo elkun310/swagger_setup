@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UploadBase64ImageRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
 
 class UploadController extends Controller
 {
@@ -55,6 +57,7 @@ class UploadController extends Controller
     public function upload(Request $request)
     {
         try {
+            dd(2);
             $validator = \Validator::make($request->all(), [
                 'file' => 'required|file|max:10240', // Max 10MB, accept any file type
             ]);
@@ -69,10 +72,10 @@ class UploadController extends Controller
             if ($request->hasFile('file')) {
                 $file = $request->file('file');
                 $fileName = $file->hashName();
-                
+
                 // Store file in local storage
                 $path = $file->storeAs('uploads', $fileName, 'local');
-                
+
                 return response()->json([
                     'success' => true,
                     'message' => 'File uploaded successfully',
@@ -83,12 +86,12 @@ class UploadController extends Controller
                     ]
                 ]);
             }
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'No file uploaded'
             ], 422);
-            
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -122,16 +125,16 @@ class UploadController extends Controller
     public function listFiles()
     {
         $files = Storage::disk('local')->files('uploads');
-        
+
         $filesData = collect($files)->map(function($file) {
             $size = Storage::disk('local')->size($file);
-            $sizeText = $size > 1024 * 1024 
+            $sizeText = $size > 1024 * 1024
                 ? number_format($size / (1024 * 1024), 2) . ' MB'
                 : number_format($size / 1024, 2) . ' KB';
 
             // Get the current request's host and scheme
             $baseUrl = URL::to('/');
-            
+
             return [
                 'name' => basename($file),
                 'size' => $size,
@@ -232,5 +235,30 @@ class UploadController extends Controller
                 'message' => 'Error deleting file: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    public function uploadBase64(UploadBase64ImageRequest $request)
+    {
+        $base64Image = $request->input('image');
+
+        // Lấy type (jpg, png,...)
+        preg_match('/^data:image\/(\w+);base64,/', $base64Image, $matches);
+        $type = strtolower($matches[1]);
+
+        $imageData = base64_decode(substr($base64Image, strpos($base64Image, ',') + 1));
+        dd($imageData);
+        if ($imageData === false) {
+            return response()->json(['error' => 'Không thể decode ảnh'], 400);
+        }
+
+        $fileName = Str::uuid() . '.' . $type;
+        $filePath = 'images/' . $fileName;
+
+        Storage::disk('public')->put($filePath, $imageData);
+
+        return response()->json([
+            'message' => 'Upload thành công',
+            'path' => 'storage/' . $filePath,
+        ]);
     }
 }

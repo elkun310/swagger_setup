@@ -45,3 +45,8 @@ Route::post('/upload', [UploadController::class, 'upload'])->name('upload');
 Route::get('/files', [UploadController::class, 'listFiles'])->name('files.list');
 Route::get('/files/view/{filename}', [UploadController::class, 'viewFile'])->name('files.view');
 Route::delete('/files/{filename}', [UploadController::class, 'deleteFile'])->name('files.delete');
+
+Route::get('test-image-base64', function () {
+   return view('test-image-base64');
+});
+Route::post('upload-base64', [UploadController::class, 'uploadBase64'])->name('upload-base64');

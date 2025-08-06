@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Files</title>
-    
+
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets/favicon/favicon-32x32.png') }}">
@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/favicon/apple-touch-icon.png') }}">
     <link rel="manifest" href="{{ asset('assets/favicon/site.webmanifest') }}">
     <meta name="theme-color" content="#0D6EFD">
-    
+
     <!-- Bootstrap CSS -->
     <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet">
     <!-- Font Awesome CSS -->
@@ -153,7 +153,7 @@
                 filePreviewList.empty();
                 totalFiles = files.length;
                 uploadedFiles = 0;
-                
+
                 // Create preview items for each file
                 Array.from(files).forEach((file, index) => {
                     const fileSize = formatFileSize(file.size);
@@ -181,7 +181,7 @@
 
                 // Show progress container
                 $('.upload-progress-container').show();
-                
+
                 // Start uploading files
                 uploadFiles(files);
             }
@@ -193,53 +193,55 @@
             }
 
             function uploadFile(file, index) {
+                console.log(file, index, 9)
                 const formData = new FormData();
-            formData.append('file', file);
+                formData.append('file', file);
                 formData.append('_token', '{{ csrf_token() }}');
+                console.log(formData, 888);
 
                 const previewItem = $(`.file-preview-item[data-index="${index}"]`);
                 const fileProgressBar = previewItem.find('.progress-bar');
 
-            $.ajax({
+                $.ajax({
                     url: form.attr('action'),
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                    xhr: function() {
-                        const xhr = new window.XMLHttpRequest();
-                        xhr.upload.addEventListener('progress', function(e) {
-                            if (e.lengthComputable) {
-                                const percent = Math.round((e.loaded / e.total) * 100);
-                                fileProgressBar.css('width', percent + '%').text(percent + '%');
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                        xhr: function() {
+                            const xhr = new window.XMLHttpRequest();
+                            xhr.upload.addEventListener('progress', function(e) {
+                                if (e.lengthComputable) {
+                                    const percent = Math.round((e.loaded / e.total) * 100);
+                                    fileProgressBar.css('width', percent + '%').text(percent + '%');
+                                    updateOverallProgress();
+                                }
+                            });
+                            return xhr;
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                uploadedFiles++;
+                                previewItem.addClass('upload-success');
                                 updateOverallProgress();
+
+                                if (uploadedFiles === totalFiles) {
+                                    toastr.success('All files uploaded successfully!', 'Success');
+                                    setTimeout(function() {
+                                        window.location.href = "{{ route('files.list') }}";
+                                    }, 1500);
+                                }
+                            } else {
+                                previewItem.addClass('upload-error');
+                                toastr.error(`Error uploading ${file.name}: ${response.message}`, 'Error');
                             }
-                        });
-                        return xhr;
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            uploadedFiles++;
-                            previewItem.addClass('upload-success');
-                            updateOverallProgress();
-                            
-                            if (uploadedFiles === totalFiles) {
-                                toastr.success('All files uploaded successfully!', 'Success');
-                                setTimeout(function() {
-                                    window.location.href = "{{ route('files.list') }}";
-                                }, 1500);
-                            }
-                        } else {
+                        },
+                        error: function(xhr) {
                             previewItem.addClass('upload-error');
-                            toastr.error(`Error uploading ${file.name}: ${response.message}`, 'Error');
+                            const response = xhr.responseJSON;
+                            toastr.error(`Error uploading ${file.name}: ${response?.message || 'Upload failed'}`, 'Error');
                         }
-                    },
-                    error: function(xhr) {
-                        previewItem.addClass('upload-error');
-                        const response = xhr.responseJSON;
-                        toastr.error(`Error uploading ${file.name}: ${response?.message || 'Upload failed'}`, 'Error');
-                    }
-                });
+                    });
             }
 
             function updateOverallProgress() {
@@ -284,7 +286,7 @@
             $(document).on('click', '.remove-file', function() {
                 const index = $(this).data('index');
                 $(`.file-preview-item[data-index="${index}"]`).remove();
-                
+
                 // Create new FileList without the removed file
                 const dt = new DataTransfer();
                 const files = fileInput[0].files;
@@ -295,12 +297,12 @@
                 }
                 fileInput[0].files = dt.files;
                 totalFiles = dt.files.length;
-                
+
                 if (totalFiles === 0) {
                     $('.upload-progress-container').hide();
                     filePreviewList.empty();
                 }
-                
+
                 updateOverallProgress();
         });
     });
