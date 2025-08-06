@@ -261,4 +261,26 @@ class UploadController extends Controller
             'path' => 'storage/' . $filePath,
         ]);
     }
+
+    public function storeFilePond(Request $request)
+    {
+        if ($request->hasFile('file')) {
+            // Nếu là upload nhiều file, Laravel sẽ nhận dưới dạng mảng
+            $files = $request->file('file');
+
+            $paths = [];
+            foreach ((array) $files as $file) {
+                $paths[] = [
+                    'path' => $file->store('uploads', 'public'),
+                    'name' => $file->getClientOriginalName()
+                ];
+            }
+
+            return response()->json([
+                'files' => $paths
+            ]);
+        }
+
+        return response()->json(['error' => 'No file uploaded'], 400);
+    }
 }
