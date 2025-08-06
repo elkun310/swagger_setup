@@ -35,3 +35,9 @@ Route::get('/send-sms', function(){
     ';
 });
 Route::get('submit-sms', [SmsController::class, 'sendMessage']);
+
+Route::get('/upload-file-pond', function () {
+    return view('upload_file_pond');
+});
+
+Route::post('/upload-file-pond', [UploadController::class, 'storeFilePond'])->name('upload-file-pond');
