@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Term;
 use Illuminate\Http\Request;
 use OpenApi\Annotations as OA;
+use Illuminate\Support\Facades\Validator;
 
 class TermController extends Controller
 {
@@ -201,12 +202,22 @@ class TermController extends Controller
     public function store(Request $request)
     {
         try {
-            $validated = $request->validate([
+            $validator = Validator::make($request->all(), [
                 'version' => 'required|string',
                 'title' => 'required|string',
                 'apply_date' => 'required|date',
-                'content' => 'nullable|string',
+                'content' => [
+                    'sometimes',
+                    function ($attribute, $value, $fail) use ($request) {
+                        $applyDate = $request->input('apply_date');
+                        if ($applyDate && strtotime($applyDate) > strtotime('2025-01-01') && empty($value)) {
+                            $fail('Trường nội dung (content) là bắt buộc khi ngày áp dụng sau 01/01/2025.');
+                        }
+                    },
+                ],
             ]);
+
+            $validated = $validator->validate();
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json($e->errors(), 422);
         }
