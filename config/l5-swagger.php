@@ -5,14 +5,35 @@ return [
     'documentations' => [
         'default' => [
             'api' => [
-                'title' => 'L5 Swagger UI',
+                'title' => 'File Upload API',
+                'version' => '1.0.0',
             ],
 
             'routes' => [
                 /*
                  * Route for accessing api documentation interface
                  */
-                'api' => 'api/documentation',
+                'api' => 'api/v1/documentation',
+
+                /*
+                 * Route for accessing parsed swagger annotations.
+                 */
+                'docs' => 'api/v1/documentation.json',
+
+                /*
+                 * Route for Oauth2 authentication callback.
+                 */
+                'oauth2_callback' => 'api/oauth2-callback',
+
+                /*
+                 * Middleware allows to prevent unexpected access to API documentation
+                 */
+                'middleware' => [
+                    'api' => [],
+                    'asset' => [],
+                    'docs' => [],
+                    'oauth2_callback' => [],
+                ],
             ],
             'paths' => [
                 /*
@@ -46,6 +67,21 @@ return [
                 'annotations' => [
                     base_path('app'),
                 ],
+
+                /*
+                 * Public path for accessing generated documentation
+                 */
+                'public' => 'docs',
+
+                /*
+                 * Edit to set the api's base path
+                 */
+                'base' => env('L5_SWAGGER_BASE_PATH', null),
+
+                /*
+                 * Absolute paths to directory containing the swagger annotations are stored.
+                 */
+                'excludes' => [],
             ],
         ],
     ],
@@ -312,7 +348,7 @@ return [
          * Constants which can be used in annotations
          */
         'constants' => [
-            'L5_SWAGGER_CONST_HOST' => env('L5_SWAGGER_CONST_HOST', 'http://my-default-host.com'),
+            'L5_SWAGGER_CONST_HOST' => env('L5_SWAGGER_CONST_HOST', 'http://project.test/api/v1'),
         ],
     ],
 ];

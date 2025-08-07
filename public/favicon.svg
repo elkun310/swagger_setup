@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background Circle -->
+    <circle cx="16" cy="16" r="16" fill="#0D6EFD"/>
+    
+    <!-- Folder Icon -->
+    <path d="M25 11H16L14 9H7C5.9 9 5 9.9 5 11V21C5 22.1 5.9 23 7 23H25C26.1 23 27 22.1 27 21V13C27 11.9 26.1 11 25 11Z" fill="white"/>
+    
+    <!-- Upload Arrow -->
+    <path d="M16 14V19M16 14L13 17M16 14L19 17" stroke="#0D6EFD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg> 
